@@ -1,6 +1,7 @@
 package tests;
 
 import app.APIHelper;
+import app.WebDriverFactory;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import model.*;
 import org.apache.commons.configuration2.PropertiesConfiguration;
@@ -11,10 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.*;
 import java.io.File;
@@ -60,7 +58,6 @@ public class TestBase {
             .build();
     BuildData initialBuild = new BuildData(initialTestPlan, "Initial build");
 
-
     @BeforeClass
     public static void setupClass() {
         WebDriverManager.chromedriver().setup();
@@ -73,9 +70,7 @@ public class TestBase {
         SystemConfiguration.setSystemProperties(properties);
         apiHelper = new APIHelper();
         apiHelper.create(initialProject, initialTestPlan, initialBuild, initialTestSuite, initialTestCase);
-        options = new ChromeOptions();
-        //options.addArguments("--window-position=2000,0");
-        driver = new ChromeDriver(options);
+        driver = new WebDriverFactory().createNew(System.getProperty("browser"));
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
         wait = new WebDriverWait(driver, 4);

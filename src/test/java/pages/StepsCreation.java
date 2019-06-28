@@ -47,12 +47,16 @@ public class StepsCreation extends Page {
         int count = getRowsCount();
         switchTo(workframe);
         for(TestCaseData.Step step : steps) {
-            driver.switchTo().frame(this.steps);
-            ((JavascriptExecutor)driver).executeScript("document.getElementsByTagName(\"p\")[0].innerHTML=\"" + step.getActions() + "\"");
-            driver.switchTo().parentFrame();
-            driver.switchTo().frame(this.expectedResults);
-            ((JavascriptExecutor)driver).executeScript("document.getElementsByTagName(\"p\")[0].innerHTML=\"" + step.getResults() + "\"");
-            driver.switchTo().parentFrame();
+            if(step.getActions() != null) {
+                driver.switchTo().frame(this.steps);
+                ((JavascriptExecutor)driver).executeScript("document.getElementsByTagName(\"p\")[0].innerHTML=\"" + step.getActions() + "\"");
+                driver.switchTo().parentFrame();
+            }
+           if(step.getResults() != null) {
+               driver.switchTo().frame(this.expectedResults);
+               ((JavascriptExecutor)driver).executeScript("document.getElementsByTagName(\"p\")[0].innerHTML=\"" + step.getResults() + "\"");
+               driver.switchTo().parentFrame();
+           }
             Select executionType = new Select(this.executionType);
             executionType.selectByVisibleText(step.getExecutionType().toString());
             WebElement staleStepsElement = driver.findElement(By.cssSelector(stepsLocator));
